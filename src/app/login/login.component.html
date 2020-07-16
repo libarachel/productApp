@@ -1,0 +1,14 @@
+<h1>Login Form</h1><hr/>
+<form>
+<div class="formcontainer" style="margin-left: 280px;">
+  
+<div class="container">
+  <label for="username"><strong>Username</strong></label>
+  <input type="text" name="username" [(ngModel)]="loginUserDetails.email" required>
+  <label for="password"><strong>Password</strong></label>
+  <input type="password"  name="password" [(ngModel)]="loginUserDetails.password" required>
+</div>
+<button type="button" (click)="loginUser()" >Login</button>
+
+</div></form>
+
