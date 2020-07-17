@@ -18,7 +18,7 @@
                     </tr>
                 </thead>
                 <tbody>
-      <tr *ngFor='let product of products;'>
+      <tr *ngFor='let product of products;let i= index'>
           <td> <img *ngIf='showImage' [src] = 'product.imageUrl'
                     [title] ='product.productName'
                     [style.width.px] = 'imageWidth'
@@ -29,8 +29,8 @@
                     
                     <td>{{ product.price }}</td>
                     <td>{{ product.starRating }}</td>
-                   <td> <input type="button"  value="edit"/></td>
-                   <td> <input type="button" (click)="deleteProducts(product._id)" value="delete"/></td>
+                   <td> <input type="button"  [routerLink]="['/edit', product._id]" value="edit"/></td>
+                   <td> <input type="button" (click)="deleteProducts(product,i)" value="delete"/></td>
       </tr>
                 </tbody>
             </table>

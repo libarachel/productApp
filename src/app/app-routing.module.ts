@@ -7,7 +7,12 @@ import { RegisterComponent } from './register/register.component';
 import { AuthGuard } from './auth.guard';
 import { EditProductComponent } from './edit-product/edit-product.component';
 
-const routes: Routes = [ {path: '', component: ProductListComponent},
+const routes: Routes = [ 
+  { path: '',
+  redirectTo: 'products',
+  pathMatch: 'full' 
+},
+  {path: 'products', component: ProductListComponent},
  { path: 'add', component: NewProductComponent, canActivate: [AuthGuard]}, { path: 'edit/:id', component: EditProductComponent},
 {path : 'register' , component: RegisterComponent}, { path: 'login' , component: LoginComponent}
 ];

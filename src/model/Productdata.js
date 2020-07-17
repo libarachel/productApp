@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/productDb');
+//mongoose.connect('mongodb://localhost:27017/productDb');
 
 const port = 3000;
 const Schema =  mongoose.Schema;

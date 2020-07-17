@@ -1,19 +1,19 @@
 const express = require('express');
 const mongoose=require('mongoose');
+const router = express.Router();
 
+mongoose.connect('mongodb://localhost:27017/productDb');
 
-
-
-const productData = require('./src/model/Productdata');
-const User = require('./src/model/userdata');
-const cors =  require('cors');
-var bodyparser = require('body-parser');
+const productData = require('../model/Productdata');
+const User = require('../model/userdata');
+//const cors =  require('cors');
+//var bodyparser = require('body-parser');
 
 const jwt=require('jsonwebtoken');
-var app = new express();
+//var app = new express();
 
-app.use(bodyparser.json());
-app.use(cors());
+//app.use(bodyparser.json());
+//app.use(cors());
 
 function verifyToken(req,res,next){
     if(!req.headers.authorization){
@@ -31,7 +31,7 @@ function verifyToken(req,res,next){
         
   next()
     }
-app.get('/products',function(req,res){
+    router.get('/products',function(req,res){
     res.header("Access-control-Allow-Origin","*")
     res.header("Access-control-Allow-Methods : GET ,POST ,POTCH ,PUT ,DELETE ,OPTIONS");
     productData.find()
@@ -40,7 +40,7 @@ res.send(products);
               });
 
 });
- app.post('/insert', function(req,res){
+router.post('/add', function(req,res){
      res.header("Access-control-Allow-Origin","*")
      res.header("Access-control-Allow-Methods : GET ,POST ,POTCH ,PUT ,DELETE ,OPTIONS");
      console.log(req.body);
@@ -58,20 +58,39 @@ res.send(products);
 var product =new productData(product);
 product.save();
  });
-app.delete('/delete/:id',(req,res) =>{
-    productData.findByIdAndDelete(req.params.id,(err,doc)=>{
-        if(err){
-            console.log(err);
-            res.send(err);
-        }
-        else{
-            res.send(doc);
-            console.log('deleted product');
-        }
-    })
-})
+ router.get('/edit/:id',function(req,res){
 
-app.post('/register',(req, res) => {
+    productData.findById(req.params.id,(err,data)=>{
+        if (!err) {return res.send(data)}
+        else { console.log('Error in retireiving product details for updation')}
+    });
+ 
+ 
+ 
+    router.post('/update/:id',function(req,res){
+        productData.findByIdAndUpdate(req.params.id,
+         { $set: req.body },
+                 (err,data)=>{
+                     if (!err) { res.status(200).send(data);
+                                 console.log('Product update successfull')}
+                     else { console.log('Error in employee update' + err)}
+                 })
+    })
+    })
+ 
+    router.delete('/delete/:id',(req,res)=>{
+        productData.findByIdAndDelete(req.params.id,(err,doc)=>{
+         if(err){
+             console.log(err);
+             res.send(err);
+         }else{
+         res.send(doc);
+         console.log('deleted product');
+     }
+             })
+ })
+
+ router.post('/register',(req, res) => {
     let userdata =req.body
  let user = new User(userdata)
  user.save((err ,registeredUser) => {
@@ -85,7 +104,7 @@ app.post('/register',(req, res) => {
         }
     })
 })
-app.post('/login',(req,res)=>{
+router.post('/login',(req,res)=>{
     let userdata =req.body
     User.findOne({email:userdata.email }, (err,user) =>{
         if(err){
@@ -107,6 +126,4 @@ app.post('/login',(req,res)=>{
         
     })
 })
-app.listen(3000,function(){
-    console.log('listening to port 3000');
-})
+module.exports = router;
